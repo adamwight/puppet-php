@@ -126,17 +126,21 @@ define php::extension (
         }
       }
 
-      php::extension::config { $settings_name:
-        ensure          => $ensure,
-        provider        => $provider,
-        so_name         => $so_name,
-        ini_prefix      => $ini_prefix,
-        php_api_version => $php_api_version,
-        zend            => $zend,
-        settings        => $settings_hash,
-        settings_prefix => $settings_prefix,
-        sapi            => $sapi,
-        subscribe       => Php::Extension::Install[$title],
+      if !empty($settings_hash) {
+        # If BSD,
+        # FIXME: Don't enable the extension here, that's done by the package.  Only add configuration.
+        php::extension::config { $settings_name:
+          ensure          => $ensure,
+          provider        => $provider,
+          so_name         => $so_name,
+          ini_prefix      => $ini_prefix,
+          php_api_version => $php_api_version,
+          zend            => $zend,
+          settings        => $settings_hash,
+          settings_prefix => $settings_prefix,
+          sapi            => $sapi,
+          subscribe       => Php::Extension::Install[$title],
+        }
       }
     }
   }
